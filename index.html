@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description" content="Typing Tutor">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Typing Tutor</title>
+</head>
+<body>
+  
+<audio controls id='myAudio'>
+  <source src="https://evolution.voxeo.com/library/audio/prompts/alphabet/A.wav" type="audio/wav">
+Your browser does not support the audio element.
+</audio>
+  
+<script>
+
+var global_wav_url = {};
+global_wav_url['a'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/A.wav';
+global_wav_url['b'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/B.wav';
+global_wav_url['c'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/C.wav';
+global_wav_url['d'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/D.wav';
+global_wav_url['e'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/E.wav';
+global_wav_url['f'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/F.wav';
+global_wav_url['g'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/G.wav';
+global_wav_url['h'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/H.wav';
+global_wav_url['i'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/I.wav';
+global_wav_url['j'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/J.wav';
+global_wav_url['k'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/K.wav';
+global_wav_url['l'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/L.wav';
+
+var speak = document.getElementById("myAudio"); 
+
+function playAudio(letter) { 
+  if ( global_wav_url[letter] === undefined ) 
+    {
+    speak.src = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/Z.wav';
+    }
+  else
+  {
+  speak.src = global_wav_url[letter];
+  }
+    
+  speak.play(); 
+} 
+
+function pauseAudio() { 
+  speak.pause(); 
+}
+  
+//playAudio('c');
+  
+</script>
+
+  </body>
+</html>
