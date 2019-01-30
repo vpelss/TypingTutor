@@ -1,20 +1,102 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="description" content="Typing Tutor">
+<meta name="description" content="Typing Tutor">    
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
   <title>Typing Tutor</title>
+  <style>
+  body { background-color: gray; }
+  form { text-align: center; }
+  .tocenter { text-align: center; }
+  #typingtext , #displaybox { text-align: center; border-style: solid; border-width: 1px; } 
+  </style>
+  <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
 </head>
-<body>
   
-<audio controls id='myAudio'>
+<body id='whole'>
+
+<audio jcontrols id='myAudio'>
   <source src="https://evolution.voxeo.com/library/audio/prompts/alphabet/A.wav" type="audio/wav">
 Your browser does not support the audio element.
 </audio>
-  
-<script>
 
+<div >  
+<pre id='typingtext'>ghdfgdgfd
+ghfghfhgd
+</pre>
+</div>
+  
+<div id='letterdisplay'>g h</div>
+<form>
+<textarea id='inputtextbox' rows="4" cols="50">
+At w3schools.com you will learn how to make a website. We offer free tutorials in all web development technologies. 
+</textarea>  
+<textarea id='outputtextbox' rows="4" cols="50" readOnly='true'>
+
+</textarea> 
+</form>
+  
+<div id='displaybox'>
+Text <u>Output</u> Box
+</div>
+
+<script>
+  
+var myElement = document.getElementById('inputtextbox');
+var startPosition = myElement.selectionStart;
+var endPosition = myElement.selectionEnd;
+  
+myElement.selectionStart = 5;
+//myElement.focus();
+  
+function wholekeydown(event)
+{
+if ( $('#inputtextbox').is( ":focus" ) )
+  {
+  return 1;
+  }
+//get next letter
+  
+//test next letter
+   
+$('#letterdisplay').html(event.key);  
+//playAudio(event.key);
+}
+ 
+function wholekeyup(event)
+{
+$('#letterdisplay').html('&nbsp;');  
+}
+  
+function unfocus_inputtextbox() 
+{
+var myElement = document.getElementById('inputtextbox');
+var startPosition = myElement.selectionStart;
+var orig_text = $( "#inputtextbox" ).val( );
+
+//var endPosition = myElement.selectionEnd;
+//myElement.selectionEnd = startPosition + 10;
+//$('#letterdisplay').html(startPosition);   
+}
+  
+function change_displaybox()
+{
+//copy input text to output text
+var t = $( "#inputtextbox" ).val( );
+$( "#displaybox" ).html( t );
+$( "#outputtextbox" ).val( t );
+}
+  
+//bind event hanlers
+$( "#whole" ).keydown( wholekeydown );
+$( "#whole" ).keyup( wholekeyup );
+//$( "#inputtextbox" ).focusout( unfocus_inputtextbox );
+//$( "#inputtextbox" ).change( change_displaybox );
+ $( "#inputtextbox" ).keypress(change_displaybox)
+//$( "#displaybox" ).change( change_displaybox );
+$( "#inputtextbox" ).focusout( unfocus_inputtextbox );
+  
 var global_wav_url = {};
 global_wav_url['a'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/A.wav';
 global_wav_url['b'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/B.wav';
@@ -28,10 +110,24 @@ global_wav_url['i'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabe
 global_wav_url['j'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/J.wav';
 global_wav_url['k'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/K.wav';
 global_wav_url['l'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/L.wav';
+global_wav_url['m'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/M.wav';
+global_wav_url['n'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/N.wav';
+global_wav_url['o'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/O.wav';
+global_wav_url['p'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/P.wav';
+global_wav_url['q'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/Q.wav';
+global_wav_url['r'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/R.wav';
+global_wav_url['s'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/S.wav';
+global_wav_url['t'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/T.wav';
+global_wav_url['u'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/U.wav';
+global_wav_url['v'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/V.wav';
+global_wav_url['w'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/W.wav';
+global_wav_url['x'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/X.wav';
+global_wav_url['y'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/Y.wav';
+global_wav_url['z'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/Z.wav';
 
 var speak = document.getElementById("myAudio"); 
-
-function playAudio(letter) { 
+function playAudio(letter) 
+{ 
   if ( global_wav_url[letter] === undefined ) 
     {
     speak.src = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/Z.wav';
@@ -39,15 +135,15 @@ function playAudio(letter) {
   else
   {
   speak.src = global_wav_url[letter];
-  }
-    
-  speak.play(); 
+  }    
+speak.play(); 
 } 
 
-function pauseAudio() { 
-  speak.pause(); 
+function pauseAudio() 
+{ 
+speak.pause(); 
 }
-  
+
 //playAudio('c');
   
 </script>
