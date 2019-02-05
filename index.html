@@ -7,9 +7,9 @@
   <title>Typing Tutor</title>
   <style>
   body { background-color: gray; }
-  form { text-align: center; }
   .tocenter { text-align: center; }
-  #typingtext , #displaybox { text-align: center; border-style: solid; border-width: 1px; } 
+   #letterdisplay { font-size: 25px; }
+  #titletext { text-align: center; border-style: } 
   </style>
   <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
 </head>
@@ -21,49 +21,84 @@
 Your browser does not support the audio element.
 </audio>
 
-<div >  
-<pre id='typingtext'>ghdfgdgfd
-ghfghfhgd
-</pre>
+<div>  
+<pre id='titletext'>Typing Tutor</pre>
 </div>
-  
-<div id='letterdisplay'>g h</div>
-<form>
+
+<div id='letterdisplay' class='tocenter'></div>
+
+<form class='tocenter'>
+  <input type='checkbox' id='nolettersound'> No Letter Audio
+  <br>
+  <input type='checkbox' id='noerrorsound'> No Error Audio
+  <br>
 <textarea id='inputtextbox' rows="4" cols="50">
-At w3schools.com you will learn how to make a website. We offer free tutorials in all web development technologies. 
+Insert practice text you wish to type here. Place cursor where you want to start typing.
 </textarea>  
+<br>
 <textarea id='outputtextbox' rows="4" cols="50" readOnly='true'>
-
-</textarea> 
+</textarea>
+<br> 
+<input type='button' id='starttyping' value='Start Typing' onclick='unfocus_inputtextbox();'>
 </form>
-  
-<div id='displaybox'>
-Text <u>Output</u> Box
-</div>
 
-<script>
+<script> 
+ 
+var startmessage = 'After inserting text to type (in first box) click "Start Typing" button.';
+$('#letterdisplay').html( startmessage );   
   
-var myElement = document.getElementById('inputtextbox');
-var startPosition = myElement.selectionStart;
-var endPosition = myElement.selectionEnd;
-  
-myElement.selectionStart = 5;
-//myElement.focus();
-  
-function wholekeydown(event)
+function wholekeypress(event)
 {
-if ( $('#inputtextbox').is( ":focus" ) )
-  {
+if ( ! $('#outputtextbox').is( ":focus" ) )
+  {//don't record key presses in input box
   return 1;
   }
-//get next letter
-  
-//test next letter
-   
-$('#letterdisplay').html(event.key);  
-//playAudio(event.key);
-}
+
+var letter = event.key;
+lowercaseletter = letter.toLowerCase();   
  
+//get current letter
+var myElement = document.getElementById('inputtextbox');
+var myElement2 = document.getElementById('outputtextbox');
+var startPosition = myElement2.selectionStart;
+  
+  //does not work in other browsers!!!!!!!!!!!!!!!
+var targetl = window.getSelection();
+  var targetletter = targetl.toString();
+//var targetletter = document.selection.createRange().text;
+  
+if (targetletter === letter)
+  {//we typed correct letter
+  $('#letterdisplay').html(letter); 
+  if ( document.getElementById('nolettersound').checked == false )
+    {
+    if ( ! (lowercaseletter in global_wav_url) )  
+      { //we do not have it in our url array
+      //beep (100,520,100); //beep
+      playAudio('tick');
+      }
+    else
+      { //we know what it is
+      playAudio(lowercaseletter);
+      }
+    }
+ 
+  myElement2.selectionStart = startPosition + 1;
+  myElement2.selectionEnd = startPosition + 2;
+  myElement.selectionStart = startPosition + 1;
+  myElement.selectionEnd = startPosition + 2;   
+  }
+ else
+   {//we typed wrong letter
+   if ( document.getElementById('noerrorsound').checked == false )
+       {
+       playAudio('error');
+       //beep (999,220,300); //boop
+       }
+   $('#letterdisplay').html('<font color="red">XXXXXXXXXXXXX</div>');
+   } 
+}
+  
 function wholekeyup(event)
 {
 $('#letterdisplay').html('&nbsp;');  
@@ -71,32 +106,35 @@ $('#letterdisplay').html('&nbsp;');
   
 function unfocus_inputtextbox() 
 {
+change_displaybox();
+
 var myElement = document.getElementById('inputtextbox');
 var startPosition = myElement.selectionStart;
-var orig_text = $( "#inputtextbox" ).val( );
 
-//var endPosition = myElement.selectionEnd;
-//myElement.selectionEnd = startPosition + 10;
-//$('#letterdisplay').html(startPosition);   
+var myElement2 = document.getElementById('outputtextbox');
+myElement2.selectionStart = startPosition;
+myElement2.selectionEnd = startPosition + 1;
+
+$( "#outputtextbox" ).focus();
+$('#letterdisplay').html('Start typing where the highlighted cursor is.'); 
 }
   
 function change_displaybox()
 {
 //copy input text to output text
 var t = $( "#inputtextbox" ).val( );
-$( "#displaybox" ).html( t );
 $( "#outputtextbox" ).val( t );
 }
   
 //bind event hanlers
-$( "#whole" ).keydown( wholekeydown );
+$( "#whole" ).keypress( wholekeypress );
 $( "#whole" ).keyup( wholekeyup );
-//$( "#inputtextbox" ).focusout( unfocus_inputtextbox );
-//$( "#inputtextbox" ).change( change_displaybox );
- $( "#inputtextbox" ).keypress(change_displaybox)
-//$( "#displaybox" ).change( change_displaybox );
+$( "#inputtextbox" ).keypress(change_displaybox)
 $( "#inputtextbox" ).focusout( unfocus_inputtextbox );
+$( "#inputtextbox" ).focusin( function(){$('#letterdisplay').html( startmessage )} );
   
+//sound url array  
+//convert to mp3!!!
 var global_wav_url = {};
 global_wav_url['a'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/A.wav';
 global_wav_url['b'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/B.wav';
@@ -125,11 +163,14 @@ global_wav_url['x'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabe
 global_wav_url['y'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/Y.wav';
 global_wav_url['z'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/Z.wav';
 
+global_wav_url['error'] = 'https://www.emogic.com/TypingTutor/Windows Error.wav';
+global_wav_url['tick'] = 'https://www.emogic.com/TypingTutor/ButtonRelease.wav';
+
 var speak = document.getElementById("myAudio"); 
 function playAudio(letter) 
 { 
   if ( global_wav_url[letter] === undefined ) 
-    {
+    {//nothing in array - default
     speak.src = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/Z.wav';
     }
   else
@@ -143,8 +184,24 @@ function pauseAudio()
 { 
 speak.pause(); 
 }
+  
+var a = new AudioContext() // browsers limit the number of concurrent audio contexts, so you better re-use'em
 
-//playAudio('c');
+function beep(vol, freq, duration){
+  v=a.createOscillator()
+  u=a.createGain()
+  v.connect(u)
+  v.frequency.value=freq
+  v.type="square"
+  u.connect(a.destination)
+  u.gain.value=vol*0.01
+  v.start(a.currentTime)
+  v.stop(a.currentTime+duration*0.001)
+}
+ 
+//beep (100,520,200); //beep
+//beep (999,220,300); //boop
+//beep (999,210,800);beep (999,500,800); //cool
   
 </script>
 
