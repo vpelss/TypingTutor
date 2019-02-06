@@ -17,15 +17,13 @@
 <body id='whole'>
 
 <audio jcontrols id='myAudio'>
-  <source src="https://evolution.voxeo.com/library/audio/prompts/alphabet/A.wav" type="audio/wav">
+  <source src="https://www.emogic.com/TypingTutor/A.mp3" type="audio/wav">
 Your browser does not support the audio element.
 </audio>
 
 <div>  
 <pre id='titletext'>Typing Tutor</pre>
 </div>
-
-<div id='letterdisplay' class='tocenter'></div>
 
 <form class='tocenter'>
   <input type='checkbox' id='nolettersound'> No Letter Audio
@@ -39,14 +37,15 @@ Insert practice text you wish to type here. Place cursor where you want to start
 <textarea id='outputtextbox' rows="4" cols="50" readOnly='true'>
 </textarea>
 <br> 
-<input type='button' id='starttyping' value='Start Typing' onclick='unfocus_inputtextbox();'>
+<input type='button' id='starttyping' value='Start Typing' onclick='focus_outputtextbox();'>
 </form>
 
+  <div id='letterdisplay' class='tocenter'></div>
 <script> 
  
 var startmessage = 'After inserting text to type (in first box) click "Start Typing" button.';
 $('#letterdisplay').html( startmessage );   
-  
+
 function wholekeypress(event)
 {
 if ( ! $('#outputtextbox').is( ":focus" ) )
@@ -62,10 +61,10 @@ var myElement = document.getElementById('inputtextbox');
 var myElement2 = document.getElementById('outputtextbox');
 var startPosition = myElement2.selectionStart;
   
-  //does not work in other browsers!!!!!!!!!!!!!!!
-var targetl = window.getSelection();
-  var targetletter = targetl.toString();
-//var targetletter = document.selection.createRange().text;
+//does not work in other browsers!!!!!!!!!!!!!!!
+//var targetl = window.getSelection();
+var targetletter = myElement2.value.substring(startPosition, startPosition+1); //ff + chrome
+//var targetletter = mygetSelection();
   
 if (targetletter === letter)
   {//we typed correct letter
@@ -73,8 +72,7 @@ if (targetletter === letter)
   if ( document.getElementById('nolettersound').checked == false )
     {
     if ( ! (lowercaseletter in global_wav_url) )  
-      { //we do not have it in our url array
-      //beep (100,520,100); //beep
+      { //we do not have letter in our url array, but it is a correct letter
       playAudio('tick');
       }
     else
@@ -93,10 +91,11 @@ if (targetletter === letter)
    if ( document.getElementById('noerrorsound').checked == false )
        {
        playAudio('error');
-       //beep (999,220,300); //boop
        }
    $('#letterdisplay').html('<font color="red">XXXXXXXXXXXXX</div>');
    } 
+//refocus for IE. FU IE!!!!!
+$('#outputtextbox').focus();
 }
   
 function wholekeyup(event)
@@ -104,7 +103,7 @@ function wholekeyup(event)
 $('#letterdisplay').html('&nbsp;');  
 }
   
-function unfocus_inputtextbox() 
+function focus_outputtextbox() 
 {
 change_displaybox();
 
@@ -130,48 +129,49 @@ $( "#outputtextbox" ).val( t );
 $( "#whole" ).keypress( wholekeypress );
 $( "#whole" ).keyup( wholekeyup );
 $( "#inputtextbox" ).keypress(change_displaybox)
-$( "#inputtextbox" ).focusout( unfocus_inputtextbox );
+//$( "#inputtextbox" ).focusout( unfocus_inputtextbox );
+ 
 $( "#inputtextbox" ).focusin( function(){$('#letterdisplay').html( startmessage )} );
+$( "#outputtextbox" ).focusin( focus_outputtextbox );  
   
 //sound url array  
-//convert to mp3!!!
 var global_wav_url = {};
-global_wav_url['a'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/A.wav';
-global_wav_url['b'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/B.wav';
-global_wav_url['c'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/C.wav';
-global_wav_url['d'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/D.wav';
-global_wav_url['e'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/E.wav';
-global_wav_url['f'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/F.wav';
-global_wav_url['g'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/G.wav';
-global_wav_url['h'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/H.wav';
-global_wav_url['i'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/I.wav';
-global_wav_url['j'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/J.wav';
-global_wav_url['k'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/K.wav';
-global_wav_url['l'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/L.wav';
-global_wav_url['m'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/M.wav';
-global_wav_url['n'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/N.wav';
-global_wav_url['o'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/O.wav';
-global_wav_url['p'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/P.wav';
-global_wav_url['q'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/Q.wav';
-global_wav_url['r'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/R.wav';
-global_wav_url['s'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/S.wav';
-global_wav_url['t'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/T.wav';
-global_wav_url['u'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/U.wav';
-global_wav_url['v'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/V.wav';
-global_wav_url['w'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/W.wav';
-global_wav_url['x'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/X.wav';
-global_wav_url['y'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/Y.wav';
-global_wav_url['z'] = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/Z.wav';
+global_wav_url['a'] = 'https://www.emogic.com/TypingTutor/A.mp3';
+global_wav_url['b'] = 'https://www.emogic.com/TypingTutor/B.mp3';
+global_wav_url['c'] = 'https://www.emogic.com/TypingTutor/C.mp3';
+global_wav_url['d'] = 'https://www.emogic.com/TypingTutor/D.mp3';
+global_wav_url['e'] = 'https://www.emogic.com/TypingTutor/E.mp3';
+global_wav_url['f'] = 'https://www.emogic.com/TypingTutor/F.mp3';
+global_wav_url['g'] = 'https://www.emogic.com/TypingTutor/G.mp3';
+global_wav_url['h'] = 'https://www.emogic.com/TypingTutor/H.mp3';
+global_wav_url['i'] = 'https://www.emogic.com/TypingTutor/I.mp3';
+global_wav_url['j'] = 'https://www.emogic.com/TypingTutor/J.mp3';
+global_wav_url['k'] = 'https://www.emogic.com/TypingTutor/K.mp3';
+global_wav_url['l'] = 'https://www.emogic.com/TypingTutor/L.mp3';
+global_wav_url['m'] = 'https://www.emogic.com/TypingTutor/M.mp3';
+global_wav_url['n'] = 'https://www.emogic.com/TypingTutor/N.mp3';
+global_wav_url['o'] = 'https://www.emogic.com/TypingTutor/O.mp3';
+global_wav_url['p'] = 'https://www.emogic.com/TypingTutor/P.mp3';
+global_wav_url['q'] = 'https://www.emogic.com/TypingTutor/Q.mp3';
+global_wav_url['r'] = 'https://www.emogic.com/TypingTutor/R.mp3';
+global_wav_url['s'] = 'https://www.emogic.com/TypingTutor/S.mp3';
+global_wav_url['t'] = 'https://www.emogic.com/TypingTutor/T.mp3';
+global_wav_url['u'] = 'https://www.emogic.com/TypingTutor/U.mp3';
+global_wav_url['v'] = 'https://www.emogic.com/TypingTutor/V.mp3';
+global_wav_url['w'] = 'https://www.emogic.com/TypingTutor/W.mp3';
+global_wav_url['x'] = 'https://www.emogic.com/TypingTutor/X.mp3';
+global_wav_url['y'] = 'https://www.emogic.com/TypingTutor/Y.mp3';
+global_wav_url['z'] = 'https://www.emogic.com/TypingTutor/Z.mp3';
 
-global_wav_url['error'] = 'https://www.emogic.com/TypingTutor/Windows Error.wav';
-global_wav_url['tick'] = 'https://www.emogic.com/TypingTutor/ButtonRelease.wav';
+global_wav_url['error'] = 'https://www.emogic.com/TypingTutor/Windows Error.mp3';
+global_wav_url['tick'] = 'https://www.emogic.com/TypingTutor/ButtonRelease.mp3';
 
 var speak = document.getElementById("myAudio"); 
 function playAudio(letter) 
 { 
   if ( global_wav_url[letter] === undefined ) 
     {//nothing in array - default
-    speak.src = 'https://evolution.voxeo.com/library/audio/prompts/alphabet/Z.wav';
+    speak.src = 'https://www.emogic.com/TypingTutor/Z.mp3';
     }
   else
   {
@@ -185,23 +185,42 @@ function pauseAudio()
 speak.pause(); 
 }
   
-var a = new AudioContext() // browsers limit the number of concurrent audio contexts, so you better re-use'em
+  //not used now
+function mygetSelection() 
+{
+var selobj;
+if (!!window.getSelection)   
+  {
+  selobj = window.getSelection();
+  return selobj.text 
+  }; //ie?
+if (document.getSelection) 
+  {
+  selobj = document.getSelection();
+  return selobj.toString()
+  } ; //chrome
 
-function beep(vol, freq, duration){
-  v=a.createOscillator()
-  u=a.createGain()
-  v.connect(u)
-  v.frequency.value=freq
-  v.type="square"
-  u.connect(a.destination)
-  u.gain.value=vol*0.01
-  v.start(a.currentTime)
-  v.stop(a.currentTime+duration*0.001)
+selobj = document.selection.createRange(); 
+return ( selobj.text ); //ff?
+
+//return (!!document.getSelection) ? document.getSelection() :
+	      // (!!window.getSelection)   ? window.getSelection() :
+	      // document.selection.createRange().text;
+  
+var userSelection;
+if (window.getSelection) 
+  {
+	userSelection = window.getSelection();
+  }
+else if (document.selection) 
+  { // should come last; Opera!
+	userSelection = document.selection.createRange();
+  }
+  //ff userSelection
+  //ie userSelection.text
+  //
+  
 }
- 
-//beep (100,520,200); //beep
-//beep (999,220,300); //boop
-//beep (999,210,800);beep (999,500,800); //cool
   
 </script>
 
