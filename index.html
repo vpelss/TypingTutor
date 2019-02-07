@@ -37,54 +37,41 @@ Insert practice text you wish to type here. Place cursor where you want to start
 <textarea id='outputtextbox' rows="4" cols="50" readOnly='true'>
 </textarea>
 <br> 
-<input type='button' id='starttyping' value='Start Typing' onclick='focus_outputtextbox();'>
+<input type='button' id='starttyping' value='Start Typing' onclick='$( "#outputtextbox" ).focus();'>
 </form>
 
-  <div id='letterdisplay' class='tocenter'></div>
+<div id='letterdisplay' class='tocenter'></div>
+<div id='messagebox' class='tocenter'></div>
+
 <script> 
- 
-var startmessage = 'After inserting text to type (in first box) click "Start Typing" button.';
-$('#letterdisplay').html( startmessage );   
+$('#letterdisplay').html( '&nbsp;' ); 
+var startmessage = 'After inserting text to type (in first box), and placing the cursor where you want to begin, click the "Start Typing" button.';  
+$('#messagebox').html( startmessage );   
 
-function wholekeypress(event)
+function keypress_outputtextbox(event)
 {
-if ( ! $('#outputtextbox').is( ":focus" ) )
-  {//don't record key presses in input box
-  return 1;
-  }
-
 var letter = event.key;
 lowercaseletter = letter.toLowerCase();   
  
 //get current letter
-var myElement = document.getElementById('inputtextbox');
-var myElement2 = document.getElementById('outputtextbox');
-var startPosition = myElement2.selectionStart;
+var inputtextbox= document.getElementById('inputtextbox');
+var outputtextbox = document.getElementById('outputtextbox');
+var startPosition = outputtextbox.selectionStart;
   
-//does not work in other browsers!!!!!!!!!!!!!!!
-//var targetl = window.getSelection();
-var targetletter = myElement2.value.substring(startPosition, startPosition+1); //ff + chrome
-//var targetletter = mygetSelection();
+var targetletter = outputtextbox.value.substring(startPosition, startPosition+1); //ff + chrome
   
 if (targetletter === letter)
   {//we typed correct letter
   $('#letterdisplay').html(letter); 
   if ( document.getElementById('nolettersound').checked == false )
     {
-    if ( ! (lowercaseletter in global_wav_url) )  
-      { //we do not have letter in our url array, but it is a correct letter
-      playAudio('tick');
-      }
-    else
-      { //we know what it is
-      playAudio(lowercaseletter);
-      }
+    playAudio(lowercaseletter);
     }
- 
-  myElement2.selectionStart = startPosition + 1;
-  myElement2.selectionEnd = startPosition + 2;
-  myElement.selectionStart = startPosition + 1;
-  myElement.selectionEnd = startPosition + 2;   
+  //cursor + 1
+  outputtextbox.selectionStart = startPosition + 1;
+  outputtextbox.selectionEnd = startPosition + 2;
+  inputtextbox.selectionStart = startPosition + 1;
+  inputtextbox.selectionEnd = startPosition + 2;   
   }
  else
    {//we typed wrong letter
@@ -98,27 +85,26 @@ if (targetletter === letter)
 $('#outputtextbox').focus();
 }
   
-function wholekeyup(event)
+function keyup_outputtextbox(event)
 {
 $('#letterdisplay').html('&nbsp;');  
 }
   
 function focus_outputtextbox() 
 {
-change_displaybox();
+copy_inputtextbox_outputtextbox();
 
-var myElement = document.getElementById('inputtextbox');
-var startPosition = myElement.selectionStart;
+var inputtextbox = document.getElementById('inputtextbox');
+var startPosition = inputtextbox.selectionStart;
 
-var myElement2 = document.getElementById('outputtextbox');
-myElement2.selectionStart = startPosition;
-myElement2.selectionEnd = startPosition + 1;
+var outputtextbox = document.getElementById('outputtextbox');
+outputtextbox.selectionStart = startPosition;
+outputtextbox.selectionEnd = startPosition + 1;
 
-$( "#outputtextbox" ).focus();
-$('#letterdisplay').html('Start typing where the highlighted cursor is.'); 
+$('#messagebox').html('Start typing where the highlighted cursor is.'); 
 }
   
-function change_displaybox()
+function copy_inputtextbox_outputtextbox()
 {
 //copy input text to output text
 var t = $( "#inputtextbox" ).val( );
@@ -126,13 +112,11 @@ $( "#outputtextbox" ).val( t );
 }
   
 //bind event hanlers
-$( "#whole" ).keypress( wholekeypress );
-$( "#whole" ).keyup( wholekeyup );
-$( "#inputtextbox" ).keypress(change_displaybox)
-//$( "#inputtextbox" ).focusout( unfocus_inputtextbox );
- 
-$( "#inputtextbox" ).focusin( function(){$('#letterdisplay').html( startmessage )} );
-$( "#outputtextbox" ).focusin( focus_outputtextbox );  
+$( "#inputtextbox" ).keypress(copy_inputtextbox_outputtextbox) 
+$( "#inputtextbox" ).focusin( function(){$('#messagebox').html( startmessage )} );
+$( "#outputtextbox" ).focusin( focus_outputtextbox ); 
+$( "#outputtextbox" ).keypress( keypress_outputtextbox );
+$( "#outputtextbox" ).keyup( keyup_outputtextbox );
   
 //sound url array  
 var global_wav_url = {};
@@ -170,8 +154,8 @@ var speak = document.getElementById("myAudio");
 function playAudio(letter) 
 { 
   if ( global_wav_url[letter] === undefined ) 
-    {//nothing in array - default
-    speak.src = 'https://www.emogic.com/TypingTutor/Z.mp3';
+    {//nothing in array - default sound
+    speak.src = 'https://www.emogic.com/TypingTutor/ButtonRelease.mp3';
     }
   else
   {
@@ -185,7 +169,7 @@ function pauseAudio()
 speak.pause(); 
 }
   
-  //not used now
+//not used now
 function mygetSelection() 
 {
 var selobj;
@@ -203,10 +187,6 @@ if (document.getSelection)
 selobj = document.selection.createRange(); 
 return ( selobj.text ); //ff?
 
-//return (!!document.getSelection) ? document.getSelection() :
-	      // (!!window.getSelection)   ? window.getSelection() :
-	      // document.selection.createRange().text;
-  
 var userSelection;
 if (window.getSelection) 
   {
