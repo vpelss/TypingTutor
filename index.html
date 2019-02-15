@@ -26,9 +26,15 @@ Your browser does not support the audio element.
 </div>
 
 <form class='tocenter'>
-  <input type='checkbox' id='nolettersound'> No Letter Audio
+  <input type='button' id='what' value='What is this?' onclick='whatIsThis();'>
+  <br><br>
+  <input type='radio' name="soundsopt" id='letterbeforesound'> Letter before typing - audio
   <br>
-  <input type='checkbox' id='noerrorsound'> No Error Audio
+  <input type='radio' name="soundsopt" id='letteraftersound'> Letter after typing - audio
+  <br>
+  <input type='radio' name="soundsopt" id='errorsound'> Error Audio
+  <br>
+  <input type='checkbox' id='ignorecase'> Ignore Case
   <br>
 <textarea id='inputtextbox' rows="4" cols="50">
 Insert practice text you wish to type here. Place cursor where you want to start typing.
@@ -51,7 +57,7 @@ $('#messagebox').html( startmessage );
 function keypress_outputtextbox(event)
 {
 var letter = event.key;
-lowercaseletter = letter.toLowerCase();   
+var lowercaseletter = letter.toLowerCase();   
  
 //get current letter
 var inputtextbox= document.getElementById('inputtextbox');
@@ -59,11 +65,17 @@ var outputtextbox = document.getElementById('outputtextbox');
 var startPosition = outputtextbox.selectionStart;
   
 var targetletter = outputtextbox.value.substring(startPosition, startPosition+1); //ff + chrome
+
+if ( ignorecase )
+  {
+  letter = letter.toLowerCase();
+  targetletter = targetletter.toLowerCase();
+  }
   
 if (targetletter === letter)
   {//we typed correct letter
   $('#letterdisplay').html(letter); 
-  if ( document.getElementById('nolettersound').checked == false )
+  if ( document.getElementById('letteraftersound').checked == true )
     {
     playAudio(lowercaseletter);
     }
@@ -75,7 +87,7 @@ if (targetletter === letter)
   }
  else
    {//we typed wrong letter
-   if ( document.getElementById('noerrorsound').checked == false )
+   if ( document.getElementById('errorsound').checked == true )
        {
        playAudio('error');
        }
@@ -100,6 +112,12 @@ var startPosition = inputtextbox.selectionStart;
 var outputtextbox = document.getElementById('outputtextbox');
 outputtextbox.selectionStart = startPosition;
 outputtextbox.selectionEnd = startPosition + 1;
+var targetletter = outputtextbox.value.substring(startPosition, startPosition+1);
+var lowercaseletter = targetletter.toLowerCase();   
+if ( document.getElementById('letterbeforesound').checked == true )
+    {
+    playAudio(lowercaseletter);
+    }
 
 $('#messagebox').html('Start typing where the highlighted cursor is.'); 
 }
@@ -146,6 +164,7 @@ global_wav_url['w'] = 'https://www.emogic.com/TypingTutor/W.mp3';
 global_wav_url['x'] = 'https://www.emogic.com/TypingTutor/X.mp3';
 global_wav_url['y'] = 'https://www.emogic.com/TypingTutor/Y.mp3';
 global_wav_url['z'] = 'https://www.emogic.com/TypingTutor/Z.mp3';
+global_wav_url['space'] = 'https://www.emogic.com/TypingTutor/space.mp3';
 
 global_wav_url['error'] = 'https://www.emogic.com/TypingTutor/Windows Error.mp3';
 global_wav_url['tick'] = 'https://www.emogic.com/TypingTutor/ButtonRelease.mp3';
@@ -153,7 +172,11 @@ global_wav_url['tick'] = 'https://www.emogic.com/TypingTutor/ButtonRelease.mp3';
 var speak = document.getElementById("myAudio"); 
 function playAudio(letter) 
 { 
-  if ( global_wav_url[letter] === undefined ) 
+ if ( letter === ' ' ) 
+   {
+   letter = 'space';
+   }
+ if ( global_wav_url[letter] === undefined ) 
     {//nothing in array - default sound
     speak.src = 'https://www.emogic.com/TypingTutor/ButtonRelease.mp3';
     }
@@ -198,8 +221,14 @@ else if (document.selection)
   }
   //ff userSelection
   //ie userSelection.text
-  //
+  // 
+}
   
+function whatIsThis()
+{
+var text = 'This is for people who are cannot type or who are starting out. IE: Me. It is for getting a sense for where the letters are and just practicing that at a slower pace. If you are looking for a program to verifying your touch typing skill, look elsewhere.';
+
+alert(text);
 }
   
 </script>
