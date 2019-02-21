@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="description" content="Typing Tutor">    
+<meta name="description" content="Typing Tutor From Zero To One">    
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
   <title>Typing Tutor</title>
@@ -28,16 +28,22 @@ Your browser does not support the audio element.
 <form class='tocenter'>
   <input type='button' id='what' value='What is this?' onclick='whatIsThis();'>
   <br><br>
-  <input type='radio' name="soundsopt" id='letterbeforesound'> Letter before typing - audio
+  
+  <input type='radio' name="keyboardopt" id='keyboardDisplayAfterKeyPress'> Keyboard display after key press
   <br>
-  <input type='radio' name="soundsopt" id='letteraftersound'> Letter after typing - audio
+  <input type='radio' name="keyboardopt" id='keyboardDisplayBeforeKeyPress'>  Keyboard display before key press
+  <br>  
+  <input type='radio' name="soundsopt" id='letterAudioAfterKeyPress'> Letter audio after key press 
   <br>
+  <input type='radio' name="soundsopt" id='letterAudioBeforeKeyPress'> Letter audio before key press
+  <br>
+  
   <input type='radio' name="soundsopt" id='errorsound'> Error Audio
   <br>
   <input type='checkbox' id='ignorecase'> Ignore Case
   <br>
 <textarea id='inputtextbox' rows="4" cols="50">
-Insert practice text you wish to type here. Place cursor where you want to start typing.
+qwertyInsert practice text you wish to type here. Place cursor where you want to start typing.
 </textarea>  
 <br>
 <textarea id='outputtextbox' rows="4" cols="50" readOnly='true'>
@@ -75,9 +81,14 @@ if ( ignorecase )
 if (targetletter === letter)
   {//we typed correct letter
   $('#letterdisplay').html(letter); 
-  if ( document.getElementById('letteraftersound').checked == true )
+  if ( document.getElementById('letterAudioAfterKeyPress').checked == true )
     {
     playAudio(lowercaseletter);
+    }
+  if ( document.getElementById('keyboardDisplayAfterKeyPress').checked == true )
+    {
+    $( '.selectMe' ).removeClass("selectMe"); //remove all highlighted keys
+    $( '#' + lowercaseletter).addClass("selectMe");
     }
   //cursor + 1
   outputtextbox.selectionStart = startPosition + 1;
@@ -87,6 +98,7 @@ if (targetletter === letter)
   }
  else
    {//we typed wrong letter
+   $( '.selectMe' ).removeClass("selectMe"); //remove all highlighted keys
    if ( document.getElementById('errorsound').checked == true )
        {
        playAudio('error');
@@ -114,9 +126,14 @@ outputtextbox.selectionStart = startPosition;
 outputtextbox.selectionEnd = startPosition + 1;
 var targetletter = outputtextbox.value.substring(startPosition, startPosition+1);
 var lowercaseletter = targetletter.toLowerCase();   
-if ( document.getElementById('letterbeforesound').checked == true )
+if ( document.getElementById('letterAudioBeforeKeyPress').checked == true )
     {
     playAudio(lowercaseletter);
+    }
+  if ( document.getElementById('keyboardDisplayBeforeKeyPress').checked == true )
+    {
+    $( '.selectMe' ).removeClass("selectMe"); //remove all highlighted keys
+    $( '#' + lowercaseletter).addClass("selectMe");
     }
 
 $('#messagebox').html('Start typing where the highlighted cursor is.'); 
@@ -233,5 +250,80 @@ alert(text);
   
 </script>
 
+  <table align='center'>
+    <tr>
+      <td id='~' class='key dual num'>~<br>`</td>  
+      <td id='1' class='key dual num'>!<br>1</td>  
+      <td id='2' class='key dual num'>@<br>2</td>  
+      <td id='3' class='key dual num'>#<br>3</td>  
+      <td id='4' class='key dual num'>$<br>4</td>  
+      <td id='5' class='key dual num'>%<br>5</td>  
+      <td id='6' class='key dual num'>^<br>6</td>  
+      <td id='7' class='key dual num'>&<br>7</td>  
+      <td id='8' class='key dual num'>*<br>8</td>  
+      <td id='9' class='key dual num'>(<br>9</td>  
+      <td id='0' class='key dual num'>)<br>0</td>  
+      <td id='-' class='key dual num'>_<br>-</td>  
+      <td id='=' class='key dual num'>+<br>=</td>  
+    </tr>    
+    
+    <tr>
+      <td class='key dual tab'>Tab</td>  
+      <td id='q' class='key dual num'>Q</td>  
+      <td id='w' class='key dual num'>W</td>  
+      <td id='e' class='key dual num'>E</td>  
+      <td id='r' class='key dual num'>R</td>  
+      <td id='t' class='key dual num'>T</td>  
+      <td id='y' class='key dual num'>Y</td>  
+      <td id='u' class='key dual num'>U</td>  
+      <td id='i' class='key dual num'>I</td>  
+      <td id='o' class='key dual num'>O</td>  
+      <td id='p' class='key dual num'>P</td>  
+      <td class='key dual num'>{<Br>[</td>  
+      <td class='key dual num'>}<br>]</td>  
+      <td  class='key dual num'>|<br>\</td>  
+    </tr>
+   
+    <tr>
+      <td class='key dual caps'>Caps<br>Lock</td>  
+      <td class='key dual num'>A</td>  
+      <td class='key dual num'>S</td>  
+      <td class='key dual num'>D</td>  
+      <td class='key dual num'>F<br>-</td>  
+      <td class='key dual num'>G</td>  
+      <td class='key dual num'>H</td>  
+      <td class='key dual num'>J<br>-</td>  
+      <td class='key dual num'>K</td>  
+      <td class='key dual num'>L</td>  
+      <td class='key dual num'>:<br>;</td>  
+      <td class='key dual num'>"<br>'</td>  
+      <td class='key dual enter'>Enter</td>   
+    </tr>  
+    
+    <tr>
+      <td class='key dual shift left'>Shift</td>  
+      <td class='key dual num'>Z</td>  
+      <td class='key dual num'>X</td>  
+      <td class='key dual num'>C</td>  
+      <td class='key dual num'>V</td>  
+      <td class='key dual num'>B</td>  
+      <td class='key dual num'>N</td>  
+      <td class='key dual num'>M</td>  
+      <td class='key dual num'>< <br>,</td>  
+      <td class='key dual num'> ><br>.</td>  
+      <td class='key dual'>?<br>/</td>   
+      <td class='key dual shift right'>Shift</td>   
+    </tr>
+
+    <tr align='center'>
+      <td class='key dual'>&hearts;</td>  
+      <td class='key dual num'>Alt</td>  
+      <td class='key dual space'></td>  
+      <td class='key dual num'>Alt</td>  
+      <td class='key dual num'>&hearts;</td>  
+    </tr>
+    
+  </table>
+  
   </body>
 </html>
