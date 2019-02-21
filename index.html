@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="description" content="Typing Tutor From Zero To One">    
+<meta name="description" content="Typing Tutor Assistant From Zero To One">    
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
   <title>Typing Tutor</title>
@@ -30,10 +30,14 @@ Your browser does not support the audio element.
   <input type='button' id='what' value='What is this?' onclick='whatIsThis();'>
   <br><br>
   
-  <input type='radio' name="keyboardopt" id='keyboardDisplayAfterKeyPress'> Keyboard display after key press
-  <br>
+<input type='radio' name="keyboardopt" id='keyboardDisplayOff' checked>  Keyboard display off
+  <br>  
+<input type='radio' name="keyboardopt" id='keyboardDisplayAfterKeyPress'>  Keyboard display after key press
+  <br>  
   <input type='radio' name="keyboardopt" id='keyboardDisplayBeforeKeyPress'>  Keyboard display before key press
   <br>  
+  <input type='radio' name="soundsopt" id='letterAudioOff' checked> Letter audio off 
+  <br>
   <input type='radio' name="soundsopt" id='letterAudioAfterKeyPress'> Letter audio after key press 
   <br>
   <input type='radio' name="soundsopt" id='letterAudioBeforeKeyPress'> Letter audio before key press
@@ -44,7 +48,6 @@ Your browser does not support the audio element.
   <input type='checkbox' id='ignorecase'> Ignore Case
   <br>
 <textarea id='inputtextbox' rows="4" cols="50">
-qwertyInsert practice text you wish to type here. Place cursor where you want to start typing.
 </textarea>  
 <br>
 <textarea id='outputtextbox' rows="4" cols="50" readOnly='true'>
@@ -58,9 +61,22 @@ qwertyInsert practice text you wish to type here. Place cursor where you want to
 
 <script> 
 $('#letterdisplay').html( '&nbsp;' ); 
-var startmessage = 'After inserting text to type (in first box), and placing the cursor where you want to begin, click the "Start Typing" button.';  
+var startmessage = 'Choose settings. After inserting text to type (in first box), and placing the cursor where you want to begin, click the "Start Typing" button. Click "Start Typing"';  
 $('#messagebox').html( startmessage );   
-
+$('#inputtextbox').html( startmessage ); 
+ 
+function specialCharacters( lowercaseletter )
+{
+if ( lowercaseletter == ' ' ) { lowercaseletter = 'space' }
+return lowercaseletter;
+}
+  
+function highlightKey( lowercaseletter )
+{
+if ( $( '#' + $.escapeSelector(lowercaseletter) ).length ) { $( '#' + $.escapeSelector(lowercaseletter) ).addClass("selectMe") }
+// need $.escapeSelector(lowercaseletter) as ID may have a class dot/period or hash, etc in it
+}
+  
 function keypress_outputtextbox(event)
 {
 var letter = event.key;
@@ -81,6 +97,8 @@ if ( ignorecase )
   
 if (targetletter === letter)
   {//we typed correct letter
+  lowercaseletter =specialCharacters( lowercaseletter); //special characters
+  $( '.selectMe' ).removeClass("selectMe"); //remove all highlighted keys
   $('#letterdisplay').html(letter); 
   if ( document.getElementById('letterAudioAfterKeyPress').checked == true )
     {
@@ -88,8 +106,7 @@ if (targetletter === letter)
     }
   if ( document.getElementById('keyboardDisplayAfterKeyPress').checked == true )
     {
-    $( '.selectMe' ).removeClass("selectMe"); //remove all highlighted keys
-    $( '#' + lowercaseletter).addClass("selectMe");
+    highlightKey( lowercaseletter );
     }
   //cursor + 1
   outputtextbox.selectionStart = startPosition + 1;
@@ -99,7 +116,7 @@ if (targetletter === letter)
   }
  else
    {//we typed wrong letter
-   $( '.selectMe' ).removeClass("selectMe"); //remove all highlighted keys
+   $( '.key' ).addClass("selectMe"); //mark all keys red    
    if ( document.getElementById('errorsound').checked == true )
        {
        playAudio('error');
@@ -127,6 +144,7 @@ outputtextbox.selectionStart = startPosition;
 outputtextbox.selectionEnd = startPosition + 1;
 var targetletter = outputtextbox.value.substring(startPosition, startPosition+1);
 var lowercaseletter = targetletter.toLowerCase();   
+lowercaseletter =specialCharacters( lowercaseletter); //special characters
 if ( document.getElementById('letterAudioBeforeKeyPress').checked == true )
     {
     playAudio(lowercaseletter);
@@ -134,7 +152,7 @@ if ( document.getElementById('letterAudioBeforeKeyPress').checked == true )
   if ( document.getElementById('keyboardDisplayBeforeKeyPress').checked == true )
     {
     $( '.selectMe' ).removeClass("selectMe"); //remove all highlighted keys
-    $( '#' + lowercaseletter).addClass("selectMe");
+    highlightKey( lowercaseletter );
     }
 
 $('#messagebox').html('Start typing where the highlighted cursor is.'); 
@@ -190,10 +208,7 @@ global_wav_url['tick'] = 'https://www.emogic.com/TypingTutor/ButtonRelease.mp3';
 var speak = document.getElementById("myAudio"); 
 function playAudio(letter) 
 { 
- if ( letter === ' ' ) 
-   {
-   letter = 'space';
-   }
+ //if ( letter === ' ' ) { letter = 'space'; }
  if ( global_wav_url[letter] === undefined ) 
     {//nothing in array - default sound
     speak.src = 'https://www.emogic.com/TypingTutor/ButtonRelease.mp3';
@@ -244,7 +259,7 @@ else if (document.selection)
   
 function whatIsThis()
 {
-var text = 'This is for people who are cannot type or who are starting out. IE: Me. It is for getting a sense for where the letters are and just practicing that at a slower pace. If you are looking for a program to verifying your touch typing skill, look elsewhere.';
+var text = 'This is for people who are just starting to type. IE: Me. It is used for getting a sense for where the letters are and just practicing that at a slower pace. If you are looking for a program to verifying your incredible touch typing skill, look elsewhere.';
 
 alert(text);
 }
@@ -287,15 +302,15 @@ alert(text);
    
     <tr>
       <td class='key dual caps'>Caps<br>Lock</td>  
-      <td class='key dual num'>A</td>  
-      <td class='key dual num'>S</td>  
-      <td class='key dual num'>D</td>  
-      <td class='key dual num'>F<br>-</td>  
-      <td class='key dual num'>G</td>  
-      <td class='key dual num'>H</td>  
-      <td class='key dual num'>J<br>-</td>  
-      <td class='key dual num'>K</td>  
-      <td class='key dual num'>L</td>  
+      <td id='a' class='key dual num'>A</td>  
+      <td id='s' class='key dual num'>S</td>  
+      <td id='d' class='key dual num'>D</td>  
+      <td id='f' class='key dual num'>F<br>-</td>  
+      <td id='g' class='key dual num'>G</td>  
+      <td id='h' class='key dual num'>H</td>  
+      <td id='j' class='key dual num'>J<br>-</td>  
+      <td id='k' class='key dual num'>K</td>  
+      <td id='l' class='key dual num'>L</td>  
       <td class='key dual num'>:<br>;</td>  
       <td class='key dual num'>"<br>'</td>  
       <td class='key dual enter'>Enter</td>   
@@ -303,13 +318,13 @@ alert(text);
     
     <tr>
       <td class='key dual shift left'>Shift</td>  
-      <td class='key dual num'>Z</td>  
-      <td class='key dual num'>X</td>  
-      <td class='key dual num'>C</td>  
-      <td class='key dual num'>V</td>  
-      <td class='key dual num'>B</td>  
-      <td class='key dual num'>N</td>  
-      <td class='key dual num'>M</td>  
+      <td id='z' class='key dual num'>Z</td>  
+      <td id='x' class='key dual num'>X</td>  
+      <td id='c' class='key dual num'>C</td>  
+      <td id='v' class='key dual num'>V</td>  
+      <td id='b' class='key dual num'>B</td>  
+      <td id='n' class='key dual num'>N</td>  
+      <td id='m' class='key dual num'>M</td>  
       <td class='key dual num'>< <br>,</td>  
       <td class='key dual num'> ><br>.</td>  
       <td class='key dual'>?<br>/</td>   
@@ -319,7 +334,7 @@ alert(text);
     <tr align='center'>
       <td class='key dual'>&hearts;</td>  
       <td class='key dual num'>Alt</td>  
-      <td class='key dual space'></td>  
+      <td id='space' class='key dual space'></td>  
       <td class='key dual num'>Alt</td>  
       <td class='key dual num'>&hearts;</td>  
     </tr>
