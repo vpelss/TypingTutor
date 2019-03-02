@@ -1,18 +1,61 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="description" content="Typing Tutor Assistant From Zero To One">    
+<meta name="description" content="Typing Tutor Assistant : From Zero To One">    
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
-  <title>Typing Tutor</title>
+  <title>Typing Tutor Assistant : From Zero To One</title>
   <style>
-  body { background-color: gray; }
-  .tocenter { text-align: center; }
-   #letterdisplay { font-size: 25px; }
-  #titletext { text-align: center; border-style: } 
-  </style>
-  <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
-<link rel="stylesheet" href="keyboard.css">
+
+body { background-color: gray; }
+
+.tocenter { text-align: center; }
+#letterdisplay { font-size: 25px; }
+#titletext { text-align: center; border-style: } 
+    
+.selectMe
+{
+background-color: red;  
+}
+
+.key{
+  width: 30px; 
+  height:40px;
+  display: inline-block;
+  text-align: left;
+  padding-left: 8px;
+  line-height: 29px;
+  border-radius:2px;
+  margin: 0px;
+  border: 0px;
+  color: white;
+  cursor: pointer;
+  transition: box-shadow 0.7s ease;
+  border: 1px solid black; #me
+}
+
+.dual {font-size: 14px; line-height: 20px; width:30px;  }
+
+.dual {font-size: 14px; line-height: 20px;  }
+
+.backspace {width:84px; font-size: 12px;}
+
+.tab {width: 50px; line-height: 40px; font-size:13px;}
+
+.caps{width:70px; font-size:12px; line-height:18px;}
+
+.enter{width:92px; line-height:40px; text-align: center; padding-left:0;}
+
+.shift.left{width: 90px;line-height: 40px; font-size:13px;}
+
+.shift.right{width: 104px;line-height: 40px; font-size:13px;}
+
+.space{width:200px;}
+    
+</style>
+
+<script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+
 </head>
   
 <body id='whole'>
@@ -23,7 +66,7 @@ Your browser does not support the audio element.
 </audio>
 
 <div>  
-<pre id='titletext'>Typing Tutor</pre>
+<pre id='titletext'>Typing Tutor Assistant : From Zero To One</pre>
 </div>
 
 <form class='tocenter'>
@@ -47,6 +90,12 @@ Your browser does not support the audio element.
   <br>
   <input type='checkbox' id='ignorecase'> Ignore Case
   <br>
+<select onchange='loadText(this.value)'>
+ <option value="0">Instructions</option>
+ <option value="1">Practice text 1</option>
+ <option value="2">Practice text 2</option>
+</select> Preset text
+  <br>
 <textarea id='inputtextbox' rows="4" cols="50">
 </textarea>  
 <br>
@@ -61,10 +110,26 @@ Your browser does not support the audio element.
 
 <script> 
 $('#letterdisplay').html( '&nbsp;' ); 
-var startmessage = 'Choose settings. After inserting text to type (in first box), and placing the cursor where you want to begin, click the "Start Typing" button. Click "Start Typing"';  
+var startmessage = 'Choose settings. After inserting text to type (in first box), and placing the cursor where you want to begin, click the "Start Typing" button.';  
 $('#messagebox').html( startmessage );   
 $('#inputtextbox').html( startmessage ); 
- 
+
+var loadTextArray = [];
+  
+loadTextArray[0] = 'Choose settings. After inserting text to type (in first box), and placing the cursor where you want to begin, click the "Start Typing" button.';
+  
+loadTextArray[1] = 'jjj jjj jjj jjj kkk kkk kkk kkk jjj kkk jjj kkk jjj kkk jkj jkj jkj jkj kjk kjk kjk kjk jjj jjj jjj kkk kkk kkk jk jk jk kj kj kj jj kk jk kj kj jk jj jk kk kj j j j j k k k k j k k j j k k j jkj jjk kjj kkj jkk kkk jjj kjk';
+  
+loadTextArray[2] = 'lll lll lll lll ;;; ;;; ;;; ;;; lll ;;; lll ;;; lll ;;; l;l l;l l;l l;l ;l; ;l; ;l; ;l; lll lll lll ;;; ;;; ;;; l; l; l; ;l ;l ;l ll ;; l; ;l ;l l; ll l; ;; ;l l l l l ; ; ; ; l ; ; l l ; ; l l;l ll; ;ll ;;l l;; ;;; lll ;l;';
+  
+function loadText( number )
+{
+$( "#inputtextbox" ).val( loadTextArray[number] );
+//$( "#outputtextbox" ).val( t );   
+inputtextbox.selectionStart = 0;
+inputtextbox.selectionEnd = 0; 
+}
+  
 function specialCharacters( lowercaseletter )
 {
 if ( lowercaseletter == ' ' ) { lowercaseletter = 'space' }
@@ -89,7 +154,7 @@ var startPosition = outputtextbox.selectionStart;
   
 var targetletter = outputtextbox.value.substring(startPosition, startPosition+1); //ff + chrome
 
-if ( ignorecase )
+if ( document.getElementById('ignorecase').checked == true )
   {
   letter = letter.toLowerCase();
   targetletter = targetletter.toLowerCase();
@@ -259,7 +324,7 @@ else if (document.selection)
   
 function whatIsThis()
 {
-var text = 'This is for people who are just starting to type. IE: Me. It is used for getting a sense for where the letters are and just practicing that at a slower pace. If you are looking for a program to verifying your incredible touch typing skill, look elsewhere.';
+var text = 'This is for people who are just starting to type. It is used for getting a sense for where the letters are and practicing that at a slower pace. If you are looking for a program to verifying your incredible touch typing skill, look elsewhere.';
 
 alert(text);
 }
