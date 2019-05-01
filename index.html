@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width">
   <title>Typing Tutor Assistant : From Zero To One</title>
   <style>
-
+ 
 body { background-color: gray; }
 
 .tocenter { text-align: center; }
@@ -328,6 +328,51 @@ var text = 'This is for people who are just starting to type. It is used for get
 
 alert(text);
 }
+  
+function preloadAudio(url) 
+    {
+    var audio = new Audio();
+    // once this file loads, it will call loadedAudio()
+    // the file will be kept by the browser as cache
+    audio.addEventListener('canplaythrough', loadedAudio, false);
+    audio.src = url;
+    }
+    
+var loaded = 0;
+function loadedAudio() 
+    {
+    // this will be called every time an audio file is loaded
+    // we keep track of the loaded files vs the requested files
+    loaded++;
+    if (loaded == global_wav_url.length)
+      {
+    	// all have loaded
+    	init();
+      }
+    }
+  
+function init() 
+    {
+    // do your stuff here, audio has been loaded
+    // for example, play all files one after the other
+    var i = 0;
+    // once the player ends, play the next one
+    player.onended = function() {
+    	i++;
+        if (i >= global_wav_url.length) {
+            // end 
+            return;
+        }
+    	play(i);
+    };
+    // play the first file
+    play(i);
+    }
+
+for (var i in global_wav_url) 
+    {
+    preloadAudio(global_wav_url[i]);
+    }
   
 </script>
 
